@@ -1,1 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSUN Map Quiz</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="quiz-wrapper">
+    <section class="quiz-panel">
+      <h1>Map Quiz</h1>
 
+      <p class="instructions">
+        Please double-click on the map where you think the location is.
+      </p>
+
+      <h2 id="question">Loading map...</h2>
+
+      <p id="feedback" class="feedback">
+        Wait for the map to load.
+      </p>
+
+      <div class="stats">
+        <p><strong>Question:</strong> <span id="question-count">0 / 5</span></p>
+        <p><strong>Correct:</strong> <span id="score">0</span></p>
+        <p><strong>Time:</strong> <span id="timer">0.0s</span></p>
+        <p><strong>Best:</strong> <span id="best-score">No score yet</span></p>
+      </div>
+
+      <button id="new-game" class="new-game" hidden>Play Again</button>
+
+      <ol id="history" class="history"></ol>
+    </section>
+
+    <section class="map-panel">
+      <div id="map" aria-label="CSUN map quiz"></div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+
+
+</body>
+</html>
