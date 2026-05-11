@@ -1,6 +1,7 @@
 // CSUN Map Quiz
 // This project uses the Google Maps API for an actual map and  Rectangle objects.
 // Assigned Location: Chicano House
+// Added a leaderboard that tracks time and number of correct answers, and stores the top 3 scores in localStorage so they persist across page reloads. The leaderboard is displayed on the right side of the page and shows the best score at the top, along with the time it took to achieve that score. The user can click "New Game" to start a new quiz and try to beat their previous best score.
 
 let map;
 let guessListener;
@@ -10,7 +11,7 @@ let startTime;
 let timerInterval;
 
 const resultRectangles = []; // Keep track of the rectangles drawn on the map so we can remove them later.
-const HIGH_SCORE_KEY = "csunMapQuizBestScore";
+const LEADERBOARD_KEY = "csunMapQuizLeaderboard";
 
 const CSUN_CENTER = {
   lat: 34.2403,
@@ -58,7 +59,7 @@ const locations = [
     bounds: {
       north: 34.24270,
       south: 34.24220,
-      east: -118.52900,
+      east: -118.52920,
       west: -118.52980
     }
   },
@@ -79,7 +80,7 @@ const elements = {};
 // This function is called by the Google Maps API once the map script has loaded. It initializes the map, sets up the event listeners, and starts the first game.
 function initMap() {
   cacheDomElements();
-  loadBestScore();
+  renderLeaderboard();
 
   map = new google.maps.Map(document.getElementById("map"), {
     center: CSUN_CENTER,
@@ -91,7 +92,23 @@ function initMap() {
     draggable: false, // This prevents the user from dragging the map around
     scrollwheel: false, // This prevents the user from zooming in and out with the scroll wheel
     clickableIcons: false, // This prevents the user from clicking on points of interest on the map
-
+    
+    styles: [ // hides labels and points of interest on the map to make it less cluttered and more focused on the quiz locations
+  {
+    featureType: "poi",
+    elementType: "labels",
+    stylers: [
+      { visibility: "off" }
+    ]
+  },
+  {
+    featureType: "transit",
+    elementType: "labels",
+    stylers: [
+      { visibility: "off" }
+    ]
+  }
+],
     restriction: {
       latLngBounds: CSUN_RESTRICTION, // This restricts the map view to the specified bounds, which keeps the quiz focused on the CSUN campus area and prevents the user from getting lost in other parts of the map.
       strictBounds: true // This prevents the user from panning outside the restricted area at all
@@ -113,6 +130,7 @@ function cacheDomElements() {
   elements.bestScore = document.querySelector("#best-score");
   elements.history = document.querySelector("#history");
   elements.newGame = document.querySelector("#new-game");
+  elements.leaderboardList = document.querySelector("#leaderboard-list");
 }
 
 //  This function resets all the game state variables and UI elements to their initial state
@@ -277,52 +295,115 @@ function endGame() {
   elements.questionCount.textContent = `${locations.length} / ${locations.length}`;
   elements.newGame.hidden = false;
 
-  saveBestScore(correctTotal, finalTime);
+  saveLeaderboardScore(correctTotal, finalTime);
+  renderLeaderboard();
+
+}
+function saveLeaderboardScore(score, time) {
+  const leaderboard = getLeaderboard();
+
+  leaderboard.push({
+    score: score,
+    time: time
+  });
+
+  leaderboard.sort(function (a, b) {
+    if (b.score !== a.score) {
+      return b.score - a.score;
+    }
+
+    return a.time - b.time;
+  });
+
+  const topThree = leaderboard.slice(0, 3);
+
+  localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(topThree));
 }
 
-// This function saves the user's score and time to local storage if it's better than their previous best score. It compares the new score to the old best score and only updates it if the new score is higher, or if the scores are tied but the new time is faster.
-function saveBestScore(score, time) {
-  const oldBest = getBestScore();
-
-  const newBest =
-    !oldBest ||
-    score > oldBest.score ||
-    (score === oldBest.score && time < oldBest.time);
-
-  if (newBest) {
-    const best = {
-      score: score,
-      time: time
-    };
-
-    localStorage.setItem(HIGH_SCORE_KEY, JSON.stringify(best));
-  }
-
-  loadBestScore();
-}
-
-// This function retrieves the user's best score from local storage. It returns an object with the score and time, or null if there is no saved score.
-function getBestScore() {
-  const saved = localStorage.getItem(HIGH_SCORE_KEY);
+function getLeaderboard() {
+  const saved = localStorage.getItem(LEADERBOARD_KEY);
 
   if (!saved) {
-    return null;
+    return [];
   }
 
   return JSON.parse(saved);
 }
 
-// This function updates the best score display at the bottom of the page. If there is a saved best score, it shows the score and time. If there is no saved score, it shows a message indicating that there is no score yet.
-function loadBestScore() {
-  const best = getBestScore();
+function renderLeaderboard() {
+  const leaderboard = getLeaderboard();
 
-  if (!best) {
+  elements.leaderboardList.innerHTML = "";
+
+  for (let i = 0; i < 3; i++) {
+    const item = document.createElement("li");
+
+    if (leaderboard[i]) {
+      item.innerHTML = `
+        <span class="leaderboard-score">${leaderboard[i].score}/${locations.length}</span>
+        <span class="leaderboard-time">${leaderboard[i].time.toFixed(1)}s</span>
+      `;
+    } else {
+      item.textContent = "---";
+    }
+
+    elements.leaderboardList.appendChild(item);
+  }
+
+  updateBestScoreText(leaderboard);
+}
+
+function updateBestScoreText(leaderboard) {
+  if (!leaderboard.length) {
     elements.bestScore.textContent = "No score yet";
     return;
   }
 
+  const best = leaderboard[0];
   elements.bestScore.textContent = `${best.score}/${locations.length} in ${best.time.toFixed(1)}s`;
 }
 
+function getLeaderboard() {
+  const saved = localStorage.getItem(LEADERBOARD_KEY);
+
+  if (!saved) {
+    return [];
+  }
+
+  return JSON.parse(saved);
+}
+
+function renderLeaderboard() {
+  const leaderboard = getLeaderboard();
+
+  elements.leaderboardList.innerHTML = "";
+
+  for (let i = 0; i < 3; i++) {
+    const item = document.createElement("li");
+
+    if (leaderboard[i]) {
+      item.innerHTML = `
+        <span class="leaderboard-score">${leaderboard[i].score}/${locations.length}</span>
+        <span class="leaderboard-time">${leaderboard[i].time.toFixed(1)}s</span>
+      `;
+    } else {
+      item.textContent = "---";
+    }
+
+    elements.leaderboardList.appendChild(item);
+  }
+
+  updateBestScoreText(leaderboard);
+}
+
+function updateBestScoreText(leaderboard) {
+  if (!leaderboard.length) {
+    elements.bestScore.textContent = "No score yet";
+    return;
+  }
+
+  const best = leaderboard[0];
+  elements.bestScore.textContent = `${best.score}/${locations.length} in ${best.time.toFixed(1)}s`;
+}
 // Google Maps needs this function to be global because index.html uses callback=initMap.
 window.initMap = initMap;

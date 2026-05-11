@@ -22,7 +22,7 @@ body {
   margin: 30px auto;
   display: grid;
   grid-template-columns: 300px 1fr 230px;
-  background: #8892b8;
+   background: #98a5d9;
   border: 1px solid #d5c99f;
 }
 
@@ -137,8 +137,8 @@ body {
 
 .leaderboard-panel {
   padding: 18px;
-  background: #8892b8;
-  color: #ffffff;
+  background: #98a5d9;
+  color: #000000;
   text-align: center;
 }
 
@@ -151,7 +151,7 @@ body {
 
 .leaderboard-subtitle {
   margin: 6px 0 20px;
-  color: #ffffff;
+  color: #000000;
   font-size: 0.85rem;
   text-transform: uppercase;
 }
@@ -169,27 +169,23 @@ body {
 .leaderboard-list li {
   margin-bottom: 14px;
   padding: 10px;
-  background: #000;
-  border: 2px solid #f7d84a;
+  background: #ffffff;
+  border: 2px solid #000000;
 }
 
-/* The initials display on the leaderboard, which shows the user's initials for their score entry. It is styled to be bold and have a fixed width to align with the score and time displays. */
-.leaderboard-initials {
-  display: inline-block;
-  width: 45px;
-  font-weight: bold;
-}
 
 /* The score display on the leaderboard, which shows the user's score for the quiz. It is styled to be bold and have a fixed width to align with the initials and time displays. */
 .leaderboard-score {
   display: inline-block;
-  width: 60px;
+  width: 70px;
+  font-weight: bold;
 }
+
 
 /* The time display on the leaderboard, which shows how long it took the user to complete the quiz. It is styled to be smaller and less prominent than the initials and score, but still clearly visible. */
 .leaderboard-time {
   display: inline-block;
-  color: #ffffff;
+  color: #000000;
   font-size: 0.9rem;
 }
 
