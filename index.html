@@ -4,15 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CSUN Map Quiz</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <main class="quiz-wrapper">
     <section class="quiz-panel">
-      <h1>Map Quiz</h1>
+      <h1>CSUN Map Quiz</h1>
 
       <p class="instructions">
-        Please double-click on the map where you think the location is.
+        Double-click the map where you think the location is.
       </p>
 
       <h2 id="question">Loading map...</h2>
@@ -34,12 +34,26 @@
     </section>
 
     <section class="map-panel">
-      <div id="map" aria-label="CSUN map quiz"></div>
+      <div id="map"></div>
     </section>
+    <aside class="leaderboard-panel">
+  <h2>Top Scores</h2>
+  <p class="leaderboard-subtitle">Arcade-Style initials</p>
+
+  <ol id="leaderboard-list" class="leaderboard-list">
+    <li>---</li>
+    <li>---</li>
+    <li>---</li>
+  </ol>
+</aside>
   </main>
 
   <script src="script.js"></script>
 
-
+  <!--API Key is set up -->
+  <script
+    async
+    src="https://maps.googleapis.com/maps/api/js?key=&loading=async&callback=initMap&v=weekly"> 
+  </script>
 </body>
 </html>

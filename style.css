@@ -8,29 +8,30 @@ body {
   margin: 0;
 }
 
-body {
+body { 
   font-family: Arial, Helvetica, sans-serif;
-  background: #f3f0df;
+  background: #25241d;
   color: #1f1f1f;
 }
 
+/* The main container for the quiz and map panels. It uses CSS Grid to create a two-column layout on larger screens, and switches to a single-column layout on smaller screens. It also centers the content and sets a maximum width for better readability. */
 .quiz-wrapper {
-  width: 92%;
-  max-width: 1100px;
+  width: 96%;
+  max-width: 1300px;
   min-height: 620px;
   margin: 30px auto;
   display: grid;
-  grid-template-columns: 320px 1fr;
-  background: #e8dfbd;
+  grid-template-columns: 300px 1fr 230px;
+  background: #8892b8;
   border: 1px solid #d5c99f;
 }
 
-.quiz-panel {
+.quiz-panel { /* The left panel of the quiz, which contains the questions, feedback, and stats. It has a fixed width and a background color that contrasts with the main container. It also has padding to create space around the content. */
   padding: 24px;
 }
 
 .quiz-panel h1 {
-  margin: 0 0 6px;
+  margin: 0 0 8px;
   font-size: 1.8rem;
   line-height: 1;
 }
@@ -40,7 +41,7 @@ body {
   font-weight: bold;
 }
 
-#question {
+#question { /* The question box that displays the current question. It has a background color that stands out, white text for contrast, and padding to create space around the text. The text is centered and has a larger font size for emphasis. */
   margin: 0 0 12px;
   padding: 10px;
   background: #1f8bb5;
@@ -49,10 +50,10 @@ body {
   text-align: center;
 }
 
-.feedback {
-  min-height: 34px;
+.feedback { /* The feedback box that shows whether the user's guess was correct or wrong. It has a minimum height to ensure it doesn't collapse when empty, and it has a left border that changes color based on the feedback type. The text is bold to make it stand out. */
+  min-height: 36px;
   margin: 0 0 16px;
-  padding: 9px;
+  padding: 10px;
   background: #fff;
   border-left: 6px solid #777;
   font-weight: bold;
@@ -71,12 +72,12 @@ body {
 .feedback.finished {
   border-left-color: #111;
   color: #111;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
 }
 
 .stats {
   padding: 12px;
-  background: rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.6);
 }
 
 .stats p {
@@ -129,18 +130,81 @@ body {
   background: #ddd;
 }
 
-/* Prevent accidental text selection while double-clicking. */
 #map,
 .quiz-panel {
   user-select: none;
 }
 
-@media (max-width: 800px) {
+.leaderboard-panel {
+  padding: 18px;
+  background: #8892b8;
+  color: #ffffff;
+  text-align: center;
+}
+
+.leaderboard-panel h2 {
+  margin: 0;
+  font-size: 1.6rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.leaderboard-subtitle {
+  margin: 6px 0 20px;
+  color: #ffffff;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+}
+
+.leaderboard-list {
+  margin: 0;
+  padding: 0;
+  list-style-position: inside;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 1.1rem;
+  text-align: left;
+}
+
+/* Each entry in the leaderboard list is styled with a background color that contrasts with the leaderboard panel, and a border that matches the panel's border for a cohesive look. The padding creates space around the text, and the margin-bottom adds spacing between entries. */
+.leaderboard-list li {
+  margin-bottom: 14px;
+  padding: 10px;
+  background: #000;
+  border: 2px solid #f7d84a;
+}
+
+/* The initials display on the leaderboard, which shows the user's initials for their score entry. It is styled to be bold and have a fixed width to align with the score and time displays. */
+.leaderboard-initials {
+  display: inline-block;
+  width: 45px;
+  font-weight: bold;
+}
+
+/* The score display on the leaderboard, which shows the user's score for the quiz. It is styled to be bold and have a fixed width to align with the initials and time displays. */
+.leaderboard-score {
+  display: inline-block;
+  width: 60px;
+}
+
+/* The time display on the leaderboard, which shows how long it took the user to complete the quiz. It is styled to be smaller and less prominent than the initials and score, but still clearly visible. */
+.leaderboard-time {
+  display: inline-block;
+  color: #ffffff;
+  font-size: 0.9rem;
+}
+
+/* Responsive design: When the screen width is 950px or less, switch to a single-column layout for the quiz wrapper. The map height is reduced to fit better on smaller screens, and the leaderboard panel's border is adjusted to be on top instead of the left for better visual separation in the vertical layout. */
+@media (max-width: 950px) {
   .quiz-wrapper {
     grid-template-columns: 1fr;
   }
 
   #map {
     height: 460px;
+  }
+
+  .leaderboard-panel {
+    border-left: 0;
+    border-top: 4px solid #111;
   }
 }
